@@ -11,7 +11,7 @@ ReactDOM.render(
     <Router history={ browserHistory }>
         <Route path="/" component={App}>
             <IndexRoute component={Home} />
-            <Route path="submit" component={Submit}/>
+            <Route path="/submit" component={Submit}/>
         </Route>
     </Router>, document.getElementById('root'));
 

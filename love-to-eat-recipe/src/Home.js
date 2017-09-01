@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import IngredientList from "./IngredientList";
+import request from 'superagent';
 
 class Home extends Component {
     constructor(props){
@@ -8,6 +9,8 @@ class Home extends Component {
             recipies: JSON.parse(localStorage.getItem('recipies')) || []
         };
         this.displayRecipies = this.displayRecipies.bind(this);
+        this.validateFileCloudinaryURL = this.validateFileCloudinaryURL.bind(this);
+        //this.validateURLContainsImage = this.validateURLContainsImage.bind(this);
     }
 
     displayRecipies(){
@@ -16,6 +19,7 @@ class Home extends Component {
         this.state.recipies.map((recipe,i) => {
             resultArray.push(
                 <div key={i} className="col-sm-4">
+                    {this.validateFileCloudinaryURL(recipe)}<br/>
                     {recipe.name}<br/>
                     {recipe.description}<br/>
                     <IngredientList recipe={recipe} />
@@ -24,6 +28,13 @@ class Home extends Component {
         });
 
         return resultArray.length > 0 ? resultArray: 'No result has been added';
+    }
+
+    validateFileCloudinaryURL(recipe){
+        let hasImage = recipe.uploadFileCloudinaryURL !== 'undefined'
+                            && recipe.uploadFileCloudinaryURL !== '' ?
+                                <img src={recipe.uploadFileCloudinaryURL} alt={recipe.name} /> :  null;
+        return hasImage;
     }
 
     render(){

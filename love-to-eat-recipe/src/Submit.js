@@ -7,9 +7,9 @@ import Dropzone from 'react-dropzone';
 import request from 'superagent';
 
 // setup cloudinary account to store image
-const CLOUDINARY_API_KEY = 815783726251127;
-const CLOUDINARY_UPLOAD_PRESET = 'nfxlnvle';
-const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/kenlau95/image/upload';
+
+const CLOUDINARY_UPLOAD_PRESET = 'ogamaetu'; // using unsigned preset id for security reason
+const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/kenlau/upload';
 
 class Submit extends Component {
     // constructor
@@ -20,7 +20,8 @@ class Submit extends Component {
             newRecipe:{
                 name: "New Recipe",
                 description: "Description",
-                ingredient:[]
+                ingredient:[],
+                uploadFileCloudinaryURL: ''
             },
             uploadFileCloudinaryURL: ''
         };
@@ -45,8 +46,6 @@ class Submit extends Component {
 
     handleImageUpload(file){
         let upload = request.post(CLOUDINARY_UPLOAD_URL)
-            .field('api_key',CLOUDINARY_API_KEY)
-            .field('timestamp', Date.now() / 1000 | 0)
             .field('upload_preset',CLOUDINARY_UPLOAD_PRESET)
             .field('file', file);
 
@@ -70,13 +69,13 @@ class Submit extends Component {
         let newRecipe = this.state.newRecipe;
         newRecipe.name = this.name.value || "New recipe 1";
         newRecipe.description = this.description.value || "No Description";
+        newRecipe.uploadFileCloudinaryURL = this.state.uploadFileCloudinaryURL ||  "unknown link";
         let recipies = this.state.recipies;
         recipies.push(newRecipe);
         this.setState({recipies,newRecipe});
 
         localStorage.setItem('recipies',JSON.stringify(recipies));
         alert('Your recipe has been added to the Home page');
-
     }
 
     addIngredient(quantity, ingredient){
@@ -101,7 +100,7 @@ class Submit extends Component {
                         <Dropzone
                             multiple={false}
                             accept="image/*"
-                            onDrop={this.onImageDrop.bind(this)}>
+                            onDrop={this.onImageDrop}>
                             <p>Drop an image or click to select a image to upload</p>
                         </Dropzone>
                         <div>
